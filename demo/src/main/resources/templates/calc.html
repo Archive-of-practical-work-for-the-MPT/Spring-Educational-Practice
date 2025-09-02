@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Калькулятор</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/calc">
+                            <div class="mb-3">
+                                <label for="num1" class="form-label">Первое число:</label>
+                                <input type="number" id="num1" name="num1" step="any" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="num2" class="form-label">Второе число:</label>
+                                <input type="number" id="num2" name="num2" step="any" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="operation" class="form-label">Операция:</label>
+                                <select id="operation" name="operation" class="form-select" required>
+                                    <option value="add">Сложение (+)</option>
+                                    <option value="subtract">Вычитание (-)</option>
+                                    <option value="multiply">Умножение (*)</option>
+                                    <option value="divide">Деление (/)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <input type="submit" value="Вычислить" class="btn btn-primary">
+                            </div>
+                        </form>
+                        
+                        <div th:if="${error}" class="alert alert-danger mt-3" role="alert">
+                            <p th:text="${error}" class="mb-0"></p>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="/" class="btn btn-secondary">Вернуться на главную</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

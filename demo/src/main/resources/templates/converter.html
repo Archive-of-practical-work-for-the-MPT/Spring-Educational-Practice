@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Конвертер валют</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Конвертер валют</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/converter">
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Сумма:</label>
+                                <input type="number" id="amount" name="amount" step="any" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="fromCurrency" class="form-label">Из валюты:</label>
+                                <select id="fromCurrency" name="fromCurrency" class="form-select" required>
+                                    <option value="USD">Доллары (USD)</option>
+                                    <option value="EUR">Евро (EUR)</option>
+                                    <option value="RUB">Рубль (RUB)</option>
+                                    <option value="CNY">Юань (CNY)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="toCurrency" class="form-label">В валюту:</label>
+                                <select id="toCurrency" name="toCurrency" class="form-select" required>
+                                    <option value="USD">Доллары (USD)</option>
+                                    <option value="EUR">Евро (EUR)</option>
+                                    <option value="RUB">Рубль (RUB)</option>
+                                    <option value="CNY">Юань (CNY)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <input type="submit" value="Конвертировать" class="btn btn-success">
+                            </div>
+                        </form>
+                        
+                        <div th:if="${convertedAmount}" class="alert alert-success mt-4" role="alert">
+                            <h4 class="alert-heading">Результат конвертации:</h4>
+                            <p class="mb-0">
+                                <strong><span th:text="${amount}"></span> <span th:text="${fromCurrency}"></span></strong> = 
+                                <strong><span th:text="${convertedAmount}"></span> <span th:text="${toCurrency}"></span></strong>
+                            </p>
+                        </div>
+                        
+                        <!-- Exchange rates information -->
+                        <div class="alert alert-info mt-4" role="alert">
+                            <h5 class="alert-heading">Курс валют:</h5>
+                            <ul class="mb-0">
+                                <li>1 USD = 80.43 RUB</li>
+                                <li>1 USD = 0.8589 EUR</li>
+                                <li>1 USD = 7.14 CNY</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="/" class="btn btn-secondary">Вернуться на главную</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
