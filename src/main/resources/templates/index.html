@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Коллекция виниловых пластинок</title>
+    <!-- Подключаем Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .nav-links {
+            margin: 30px 0;
+        }
+        .description {
+            margin: 20px 0;
+        }
+        .features {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="mt-4">Коллекция виниловых пластинок</h1>
+            <p class="lead">Система управления коллекцией виниловых пластинок и коллекционеров</p>
+        </div>
+    </div>
+    
+    <div class="nav-links text-center">
+        <a href="/vinyls" class="btn btn-primary btn-lg mx-2">Виниловые пластинки</a>
+        <a href="/collectors" class="btn btn-success btn-lg mx-2">Коллекционеры</a>
+    </div>
+    
+    <div class="description text-center">
+        <p class="lead">Добро пожаловать в систему управления коллекцией виниловых пластинок!</p>
+        <p>Это приложение позволяет управлять коллекцией виниловых пластинок и коллекционеров с полным набором функций.</p>
+    </div>
+    
+    <div class="features">
+        <h2 class="text-center mb-4">Основные возможности:</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Полноценный CRUD (создание, чтение, обновление, удаление)</li>
+                    <li class="list-group-item">Поиск по различным параметрам</li>
+                    <li class="list-group-item">Фильтрация по трем критериям одновременно</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Множественное удаление записей</li>
+                    <li class="list-group-item">Логическое и физическое удаление</li>
+                    <li class="list-group-item">Пагинация с настраиваемым размером страницы</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="description text-center mt-4">
+        <p class="lead">Выберите одну из сущностей в меню выше, чтобы начать работу с приложением.</p>
+    </div>
+</div>
+
+<!-- Подключаем Bootstrap JS (необязательно, если не используем JS-компоненты) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

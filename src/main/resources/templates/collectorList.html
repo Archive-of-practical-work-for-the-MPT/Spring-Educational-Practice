@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Коллекционеры виниловых пластинок</title>
+    <!-- Подключаем Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .filters {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-bottom: 20px;
+        }
+        .btn {
+            margin: 2px;
+        }
+        table {
+            background-color: #ffffff;
+        }
+        .pagination {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Коллекционеры виниловых пластинок</h1>
+                <a href="/" class="btn btn-secondary">Назад к главной</a>
+            </div>
+            
+            <!-- Форма добавления нового коллекционера -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Добавить нового коллекционера</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/collectors/add" method="post" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="firstName" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="lastName" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="phoneNumber" class="form-label">Телефон</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="vinylCount" class="form-label">Кол-во пластинок</label>
+                            <input type="number" class="form-control" id="vinylCount" name="vinylCount" min="0" value="0">
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Фильтры -->
+            <div class="filters mt-4">
+                <h3>Фильтры</h3>
+                <form action="/collectors" method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="minVinylCount" class="form-label">Мин. кол-во</label>
+                        <input type="number" class="form-control" id="minVinylCount" name="minVinylCount" th:value="${minVinylCount}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="maxVinylCount" class="form-label">Макс. кол-во</label>
+                        <input type="number" class="form-control" id="maxVinylCount" name="maxVinylCount" th:value="${maxVinylCount}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="pageSize" class="form-label">Размер страницы</label>
+                        <select class="form-select" id="pageSize" name="size">
+                            <option value="10" th:selected="${size == 10}">10</option>
+                            <option value="20" th:selected="${size == 20}">20</option>
+                            <option value="50" th:selected="${size == 50}">50</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                    </div>
+                </form>
+                <div class="mt-2">
+                    <a href="/collectors" class="btn btn-warning">Сбросить фильтры</a>
+                </div>
+            </div>
+
+            <!-- Форма поиска -->
+            <div class="filters">
+                <h3>Поиск</h3>
+                <form action="/collectors/search" method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="searchQuery" class="form-label">Поиск</label>
+                        <input type="text" class="form-control" id="searchQuery" name="query" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="searchType" class="form-label">По параметру</label>
+                        <select class="form-select" id="searchType" name="searchType">
+                            <option value="firstName">Имя</option>
+                            <option value="lastName">Фамилия</option>
+                            <option value="email">Email</option>
+                            <option value="vinylCount">Количество пластинок</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Поиск</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Список коллекционеров -->
+            <h2 class="mt-4">Все коллекционеры:</h2>
+            <form id="multipleDeleteForm" action="/collectors/deleteMultiple" method="post">
+                <input type="hidden" name="ids" id="selectedIds">
+                <input type="hidden" name="softDelete" value="false" id="deleteType">
+                <div class="btn-group mb-3" role="group">
+                    <button type="button" class="btn btn-danger" onclick="deleteSelected(false)">Удалить выбранных</button>
+                    <button type="button" class="btn btn-warning" onclick="deleteSelected(true)">Мягкое удаление выбранных</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>
+                                ID
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>
+                                Имя
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='firstName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>
+                                Фамилия
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='lastName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>
+                                Email
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='email', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>
+                                Телефон
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='phoneNumber', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>
+                                Кол-во пластинок
+                                <a th:href="@{/collectors(page=${currentPage}, size=${size}, sortBy='vinylCount', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" class="btn btn-sm btn-outline-light">▲▼</a>
+                            </th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="collector : ${collectors}">
+                            <td><input type="checkbox" name="collectorIds" th:value="${collector.id}"></td>
+                            <td th:text="${collector.id}"></td>
+                            <td th:text="${collector.firstName}"></td>
+                            <td th:text="${collector.lastName}"></td>
+                            <td th:text="${collector.email}"></td>
+                            <td th:text="${collector.phoneNumber}"></td>
+                            <td th:text="${collector.vinylCount}"></td>
+                            <td>
+                                <form action="/collectors/update" method="post" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${collector.id}"/>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" name="firstName" th:value="${collector.firstName}" class="form-control form-control-sm" placeholder="Имя" required/>
+                                        <input type="text" name="lastName" th:value="${collector.lastName}" class="form-control form-control-sm" placeholder="Фамилия" required/>
+                                        <input type="email" name="email" th:value="${collector.email}" class="form-control form-control-sm" placeholder="Email" required/>
+                                        <input type="text" name="phoneNumber" th:value="${collector.phoneNumber}" class="form-control form-control-sm" placeholder="Телефон" required/>
+                                        <input type="number" name="vinylCount" th:value="${collector.vinylCount}" class="form-control form-control-sm" placeholder="Кол-во" min="0" required/>
+                                        <button type="submit" class="btn btn-success btn-sm">Обновить</button>
+                                    </div>
+                                </form>
+                                <form action="/collectors/delete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${collector.id}"/>
+                                    <input type="hidden" name="softDelete" value="false"/>
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                                <form action="/collectors/delete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${collector.id}"/>
+                                    <input type="hidden" name="softDelete" value="true"/>
+                                    <button type="submit" class="btn btn-warning btn-sm">Мягкое удаление</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Пагинация -->
+            <div class="pagination justify-content-center" th:if="${totalPages > 1}">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/collectors(page=0, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}">Первая</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/collectors(page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}">Предыдущая</a>
+                        </li>
+                        
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                            th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+                            th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/collectors(page=${i}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}" 
+                               th:text="${i + 1}"></a>
+                        </li>
+                        
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/collectors(page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}">Следующая</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/collectors(page=${totalPages - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, minVinylCount=${minVinylCount}, maxVinylCount=${maxVinylCount})}">Последняя</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <p class="text-center" th:text="'Всего коллекционеров: ' + ${totalItems}"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Подключаем Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Функция для выбора всех записей
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="collectorIds"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // Функция для множественного удаления
+    function deleteSelected(softDelete) {
+        const checkboxes = document.querySelectorAll('input[name="collectorIds"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Пожалуйста, выберите хотя бы одного коллекционера для удаления.');
+            return;
+        }
+        
+        const ids = Array.from(checkboxes).map(cb => cb.value).join(',');
+        document.getElementById('selectedIds').value = ids;
+        document.getElementById('deleteType').value = softDelete;
+        document.getElementById('multipleDeleteForm').submit();
+    }
+</script>
+</body>
+</html>
