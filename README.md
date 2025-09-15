@@ -1,0 +1,36 @@
+# Практические работы по Spring
+Практические работы по учебной практике 4-го курса "Внедрение и поддержка программного обеспечения" на Spring с использованием Java.
+
+Навигация:
+
+* [Практическая работа 1](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - Создание калькулятора и конвертора
+* [Практическая работа 2](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - CRUD с локальными данными
+* [Практическая работа 3](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - Работа с БД
+* [Практическая работа 4](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - Авторизация/Регистрация и Разделение прав доступа
+* [Практическая работа 5](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - API
+* [Практическая работа 6](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) -
+
+# Практическая работа 1 - Создание калькулятора и конвертора
+
+## Описание
+
+Как сделать чтобы работало?
+- Скачайте файлы и откройте папку через IntelliJ IDE.
+- Запустите код через файл DemoApplication
+- Открыть в браузере http://localhost:8080
+
+## Цель
+
+1. Главная страница , на которой находятся кнопки для перехода на страницу "Калькулятор" и "Конвертер валют" 
+2. Калькулятор, данная страница выполняет функционал базового калькулятора, но после получения результата, пользователя должно перекинуть на страницу с ответом. Необходимо использовать @PostMapping 
+3. Конвертер валют, страница на которой находится 2 выпадающих списка: в первом находится валюта из которой надо перевести деньги, а во втором в какую валюту надо перевести. 
+4. Использовать @GetMapping и @PostMapping 
+
+## Демонстрация
+
+<p align="center">
+      <img src="https://github.com/user-attachments/assets/666a297f-03d8-4bcf-a21d-38e8ba727dd5" alt="Сайт" width="700">
+</p>
+
+## Вывод
+Было разработано веб-приложение на Spring Boot, состоящее из трёх основных страниц. Реализован главный экран с навигацией, функционал калькулятора с перенаправлением на отдельную страницу результата и конвертер валют с выбором исходной и целевой валюты.
