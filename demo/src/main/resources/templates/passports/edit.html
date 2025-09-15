@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование паспорта</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Система управления</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/persons">Персоны</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/passports">Паспорта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/authors">Авторы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books">Книги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Студенты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Курсы</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Редактирование паспорта</h1>
+        
+        <form th:action="@{/passports/update/{id}(id=${passport.id})}" th:object="${passport}" method="post">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="mb-3">
+                <label for="series" class="form-label">Серия:</label>
+                <input type="text" class="form-control" id="series" th:field="*{series}" required maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                <div class="text-danger" th:if="${#fields.hasErrors('series')}" th:errors="*{series}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="number" class="form-label">Номер:</label>
+                <input type="text" class="form-control" id="number" th:field="*{number}" required maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                <div class="text-danger" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="issueDate" class="form-label">Дата выдачи:</label>
+                <input type="date" class="form-control" id="issueDate" th:field="*{issueDate}" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="person" class="form-label">Владелец (персона):</label>
+                <select class="form-control" id="person" th:field="*{person}">
+                    <option value="">Без владельца</option>
+                    <option th:each="person : ${persons}" 
+                            th:value="${person.id}" 
+                            th:text="${person.name + ' (' + person.email + ')'}"
+                            th:selected="${passport.person != null and passport.person.id == person.id}">
+                        Владелец
+                    </option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/passports" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование курса</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Система управления</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/persons">Персоны</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/passports">Паспорта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/authors">Авторы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books">Книги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Студенты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Курсы</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Редактирование курса</h1>
+        
+        <form th:action="@{/courses/update/{id}(id=${course.id})}" th:object="${course}" method="post">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="mb-3">
+                <label for="code" class="form-label">Код курса:</label>
+                <input type="text" class="form-control" id="code" th:field="*{code}" required maxlength="10">
+                <div class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="name" class="form-label">Название:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required maxlength="100">
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="credits" class="form-label">Кредиты:</label>
+                <input type="number" class="form-control" id="credits" th:field="*{credits}" min="0" oninput="validateCredits(this)">
+                <div class="text-danger" th:if="${#fields.hasErrors('credits')}" th:errors="*{credits}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Описание:</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="4" maxlength="1000"></textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="students" class="form-label">Студенты:</label>
+                <select multiple class="form-control" id="students" th:field="*{students}">
+                    <option th:each="student : ${students}" 
+                            th:value="${student.id}" 
+                            th:text="${student.firstName + ' ' + student.lastName}"
+                            th:selected="${course.students.contains(student)}">
+                        Студент
+                    </option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/courses" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function validateCredits(input) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 0) {
+                input.value = '';
+                return;
+            }
+            input.value = value;
+        }
+    </script>
+</body>
+</html>

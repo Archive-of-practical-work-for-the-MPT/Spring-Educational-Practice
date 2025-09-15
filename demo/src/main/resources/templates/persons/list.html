@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список персон</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Система управления</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/persons">Персоны</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/passports">Паспорта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/authors">Авторы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books">Книги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Студенты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/courses">Курсы</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Список персон</h1>
+        
+        <!-- Форма поиска -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <form th:action="@{/persons}" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" th:value="${search}" placeholder="Поиск по имени...">
+                        <button class="btn btn-outline-secondary" type="submit">Поиск</button>
+                        <a th:href="@{/persons}" class="btn btn-outline-primary">Сброс</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="/persons/new" class="btn btn-primary">Добавить персону</a>
+            </div>
+        </div>
+        
+        <!-- Таблица персон -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        <a th:href="@{/persons(search=${search}, page=${currentPage}, sortBy='id', sortDir=${sortBy == 'id' ? reverseSortDir : 'asc'})}">
+                            ID
+                            <span th:if="${sortBy == 'id'}">
+                                <span th:if="${sortDir == 'asc'}">↑</span>
+                                <span th:if="${sortDir == 'desc'}">↓</span>
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/persons(search=${search}, page=${currentPage}, sortBy='name', sortDir=${sortBy == 'name' ? reverseSortDir : 'asc'})}">
+                            Имя
+                            <span th:if="${sortBy == 'name'}">
+                                <span th:if="${sortDir == 'asc'}">↑</span>
+                                <span th:if="${sortDir == 'desc'}">↓</span>
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/persons(search=${search}, page=${currentPage}, sortBy='email', sortDir=${sortBy == 'email' ? reverseSortDir : 'asc'})}">
+                            Email
+                            <span th:if="${sortBy == 'email'}">
+                                <span th:if="${sortDir == 'asc'}">↑</span>
+                                <span th:if="${sortDir == 'desc'}">↓</span>
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{/persons(search=${search}, page=${currentPage}, sortBy='age', sortDir=${sortBy == 'age' ? reverseSortDir : 'asc'})}">
+                            Возраст
+                            <span th:if="${sortBy == 'age'}">
+                                <span th:if="${sortDir == 'asc'}">↑</span>
+                                <span th:if="${sortDir == 'desc'}">↓</span>
+                            </span>
+                        </a>
+                    </th>
+                    <th>Паспорт</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="person : ${persons}">
+                    <td th:text="${person.id}">ID</td>
+                    <td th:text="${person.name}">Имя</td>
+                    <td th:text="${person.email}">Email</td>
+                    <td th:text="${person.age ?: '-'}">Возраст</td>
+                    <td>
+                        <span th:if="${person.passport}" th:text="${person.passport.series + ' ' + person.passport.number}">
+                            Серия Номер
+                        </span>
+                        <span th:unless="${person.passport}">Нет паспорта</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/persons/edit/{id}(id=${person.id})}" class="btn btn-sm btn-warning">Редактировать</a>
+                        <a th:href="@{/persons/delete/{id}(id=${person.id})}" 
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Вы уверены, что хотите удалить эту персону?')">Удалить</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Пагинация -->
+        <div th:if="${totalPages > 1}" class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <!-- Предыдущая страница -->
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" 
+                           th:href="@{/persons(search=${search}, page=${currentPage - 1}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           th:if="${currentPage > 0}">Назад</a>
+                        <span class="page-link" th:if="${currentPage == 0}">Назад</span>
+                    </li>
+                    
+                    <!-- Номера страниц -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" 
+                           th:href="@{/persons(search=${search}, page=${i}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           th:text="${i + 1}">1</a>
+                    </li>
+                    
+                    <!-- Следующая страница -->
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" 
+                           th:href="@{/persons(search=${search}, page=${currentPage + 1}, sortBy=${sortBy}, sortDir=${sortDir})}"
+                           th:if="${currentPage < totalPages - 1}">Вперед</a>
+                        <span class="page-link" th:if="${currentPage == totalPages - 1}">Вперед</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Информация о количестве записей -->
+        <div class="mt-3">
+            <p>Всего записей: <span th:text="${totalItems}">0</span></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
