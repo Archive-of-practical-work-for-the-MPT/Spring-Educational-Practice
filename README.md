@@ -6,7 +6,7 @@
 * [Практическая работа 1](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/calculator) - Создание калькулятора и конвертора
 * [Практическая работа 2](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/crud) - CRUD с локальными данными
 * [Практическая работа 3](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/db) - Работа с БД
-* [Практическая работа 4]() - Авторизация/Регистрация и Разделение прав доступа
+* [Практическая работа 4](https://github.com/Archive-of-practical-work-for-the-MPT/Spring-Educational-Practice/tree/auth) - Авторизация/Регистрация и Разделение прав доступа
 * [Практическая работа 5]() - API
 * [Практическая работа 6]() - Итоговый проект
 
