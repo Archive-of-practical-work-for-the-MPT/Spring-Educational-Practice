@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Океанариум - Покупка билетов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="blocks/header :: header"></div>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1>Покупка билетов</h1>
+                <a href="/visitor" class="btn btn-secondary mb-3">Назад</a>
+            </div>
+        </div>
+        
+        <!-- Отображение ошибок -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Выберите шоу</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/visitor/tickets/buy}" method="post">
+                            <div class="mb-3">
+                                <label for="showSelect" class="form-label">Шоу:</label>
+                                <select class="form-select" id="showSelect" name="showId" required>
+                                    <option value="">Выберите шоу...</option>
+                                    <option th:each="show : ${shows}" th:value="${show.id}" th:text="${show.name} + ' (' + ${show.scheduleTime} + ')'">Шоу</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="ticketCount" class="form-label">Количество билетов:</label>
+                                <input type="number" class="form-control" id="ticketCount" name="ticketCount" min="1" max="10" value="1">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Стоимость билета:</label>
+                                <div>500 руб.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Итого к оплате:</label>
+                                <div><strong id="totalAmount">500 руб.</strong></div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Оплатить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Мои билеты</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" th:if="${tickets != null and !#lists.isEmpty(tickets)}">
+                            <thead>
+                                <tr>
+                                    <th>Шоу</th>
+                                    <th>Время</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ticket : ${tickets}">
+                                    <td th:text="${ticket.show.name}">Название шоу</td>
+                                    <td th:text="${ticket.show.scheduleTime}">Время</td>
+                                    <td><span class="badge bg-success">Оплачено</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${tickets == null or #lists.isEmpty(tickets)}">
+                            <p>У вас пока нет купленных билетов.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Обновление итоговой суммы при изменении количества билетов
+        document.getElementById('ticketCount').addEventListener('input', function() {
+            const count = parseInt(this.value) || 1;
+            const total = count * 500;
+            document.getElementById('totalAmount').textContent = total + ' руб.';
+        });
+    </script>
+</body>
+</html>

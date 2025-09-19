@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Океанариум - Расписание</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div th:replace="blocks/header :: header"></div>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12">
+          <h1>Расписание</h1>
+          <a href="/employee" class="btn btn-secondary mb-3">Назад</a>
+          <button
+            class="btn btn-primary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#addShowModal"
+          >
+            Добавить шоу
+          </button>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-12">
+          <h3>Шоу</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Время</th>
+                <th>Название</th>
+                <th>Продолжительность</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="show : ${shows}">
+                <td th:text="${show.scheduleTime}">Время</td>
+                <td th:text="${show.name}">Название</td>
+                <td th:text="${show.duration} + ' мин'">Продолжительность</td>
+                <td>
+                  <button class="btn btn-sm btn-primary">Редактировать</button>
+                  <button class="btn btn-sm btn-danger">Удалить</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно для добавления шоу -->
+    <div class="modal fade" id="addShowModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Добавить новое шоу</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="showName" class="form-label">Название:</label>
+                <input type="text" class="form-control" id="showName" />
+              </div>
+              <div class="mb-3">
+                <label for="showTime" class="form-label">Время:</label>
+                <input type="time" class="form-control" id="showTime" />
+              </div>
+              <div class="mb-3">
+                <label for="showDuration" class="form-label"
+                  >Продолжительность (мин):</label
+                >
+                <input type="number" class="form-control" id="showDuration" />
+              </div>
+              <div class="mb-3">
+                <label for="showDescription" class="form-label"
+                  >Описание:</label
+                >
+                <textarea
+                  class="form-control"
+                  id="showDescription"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary">Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
