@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-sm mt-5">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <h2 class="h4 mb-2">Регистрация</h2>
+                            <p class="text-muted">Создайте новый аккаунт</p>
+                        </div>
+                        
+                        <form th:action="@{/register}" th:object="${registrationRequest}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Имя пользователя</label>
+                                <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Пароль</label>
+                                <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Подтвердите пароль</label>
+                                <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Роль</label>
+                                <select class="form-select" id="role" th:field="*{role}" required>
+                                    <option value="">Выберите роль</option>
+                                    <option value="admin">Администратор</option>
+                                    <option value="employee">Сотрудник</option>
+                                    <option value="passenger">Пассажир</option>
+                                </select>
+                                <div class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                            </div>
+                            
+                            <div th:if="${passwordMismatch}" class="alert alert-danger" role="alert">
+                                <span th:text="${passwordMismatch}"></span>
+                            </div>
+                            
+                            <div th:if="${usernameExists}" class="alert alert-danger" role="alert">
+                                <span th:text="${usernameExists}"></span>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <p class="mb-0">Уже есть аккаунт? <a th:href="@{/login}" class="text-decoration-none">Войдите</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирования</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">Бронирования</h1>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Добавить новое бронирование</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="#" th:action="@{/bookings}" method="post" th:object="${booking}">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="bookingNumber" class="form-label">Номер бронирования</label>
+                                    <input type="text" class="form-control" th:field="*{bookingNumber}" placeholder="Номер бронирования" required>
+                                    <div th:if="${#fields.hasErrors('bookingNumber')}" class="text-danger">
+                                        <span th:errors="*{bookingNumber}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="passenger" class="form-label">Пассажир</label>
+                                    <select class="form-select" th:field="*{passenger}" required>
+                                        <option value="">Выберите пассажира</option>
+                                        <option th:each="passenger : ${passengers}" th:value="${passenger.id}" th:text="${passenger.firstName + ' ' + passenger.lastName}"></option>
+                                    </select>
+                                    <div th:if="${#fields.hasErrors('passenger')}" class="text-danger">
+                                        <span th:errors="*{passenger}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="flight" class="form-label">Рейс</label>
+                                    <select class="form-select" th:field="*{flight}" required>
+                                        <option value="">Выберите рейс</option>
+                                        <option th:each="flight : ${flights}" th:value="${flight.id}" th:text="${flight.flightNumber}"></option>
+                                    </select>
+                                    <div th:if="${#fields.hasErrors('flight')}" class="text-danger">
+                                        <span th:errors="*{flight}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="bookingDate" class="form-label">Дата бронирования</label>
+                                    <input type="datetime-local" class="form-control" th:field="*{bookingDate}" required>
+                                    <div th:if="${#fields.hasErrors('bookingDate')}" class="text-danger">
+                                        <span th:errors="*{bookingDate}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="price" class="form-label">Стоимость</label>
+                                    <input type="number" step="0.01" class="form-control" th:field="*{price}" placeholder="Стоимость" required>
+                                    <div th:if="${#fields.hasErrors('price')}" class="text-danger">
+                                        <span th:errors="*{price}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Статус</label>
+                                    <input type="text" class="form-control" th:field="*{status}" placeholder="Статус" required>
+                                    <div th:if="${#fields.hasErrors('status')}" class="text-danger">
+                                        <span th:errors="*{status}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Добавить бронирование</button>
+                            <a th:href="@{/}" class="btn btn-secondary">Назад</a>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Существующие бронирования</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${bookings.empty}" class="alert alert-info">
+                            Нет бронирований в системе
+                        </div>
+                        
+                        <div th:unless="${bookings.empty}">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Номер бронирования</th>
+                                            <th>Пассажир</th>
+                                            <th>Рейс</th>
+                                            <th>Дата бронирования</th>
+                                            <th>Стоимость</th>
+                                            <th>Статус</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="booking : ${bookings}">
+                                            <td th:text="${booking.bookingNumber}">Номер бронирования</td>
+                                            <td th:text="${booking.passenger.firstName + ' ' + booking.passenger.lastName}">Пассажир</td>
+                                            <td th:text="${booking.flight.flightNumber}">Рейс</td>
+                                            <td th:text="${#temporals.format(booking.bookingDate, 'dd.MM.yyyy HH:mm')}">Дата бронирования</td>
+                                            <td th:text="${booking.price}">Стоимость</td>
+                                            <td th:text="${booking.status}">Статус</td>
+                                            <td>
+                                                <a th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                                <a th:href="@{/bookings/delete/{id}(id=${booking.id})}" 
+                                                   class="btn btn-sm btn-outline-danger" 
+                                                   onclick="return confirm('Вы уверены, что хотите удалить это бронирование?');">Удалить</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

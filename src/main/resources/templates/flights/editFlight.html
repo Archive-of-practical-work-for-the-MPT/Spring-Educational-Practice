@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование рейса</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">Редактирование рейса</h1>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Изменить данные рейса</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="#" th:action="@{/flights/update}" method="post" th:object="${flight}">
+                            <input type="hidden" th:field="*{id}" />
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="flightNumber" class="form-label">Номер рейса</label>
+                                    <input type="text" class="form-control" th:field="*{flightNumber}" placeholder="Номер рейса" required>
+                                    <div th:if="${#fields.hasErrors('flightNumber')}" class="text-danger">
+                                        <span th:errors="*{flightNumber}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="departureAirport" class="form-label">Аэропорт вылета</label>
+                                    <select class="form-select" th:field="*{departureAirport}" required>
+                                        <option value="">Выберите аэропорт вылета</option>
+                                        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.name + ' (' + airport.code + ')'}"></option>
+                                    </select>
+                                    <div th:if="${#fields.hasErrors('departureAirport')}" class="text-danger">
+                                        <span th:errors="*{departureAirport}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrivalAirport" class="form-label">Аэропорт прибытия</label>
+                                    <select class="form-select" th:field="*{arrivalAirport}" required>
+                                        <option value="">Выберите аэропорт прибытия</option>
+                                        <option th:each="airport : ${airports}" th:value="${airport.id}" th:text="${airport.name + ' (' + airport.code + ')'}"></option>
+                                    </select>
+                                    <div th:if="${#fields.hasErrors('arrivalAirport')}" class="text-danger">
+                                        <span th:errors="*{arrivalAirport}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="aircraft" class="form-label">Самолет</label>
+                                    <select class="form-select" th:field="*{aircraft}" required>
+                                        <option value="">Выберите самолет</option>
+                                        <option th:each="aircraft : ${aircrafts}" th:value="${aircraft.id}" th:text="${aircraft.model + ' (' + aircraft.serialNumber + ')'}"></option>
+                                    </select>
+                                    <div th:if="${#fields.hasErrors('aircraft')}" class="text-danger">
+                                        <span th:errors="*{aircraft}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="departureTime" class="form-label">Время вылета</label>
+                                    <input type="datetime-local" class="form-control" th:field="*{departureTime}" required>
+                                    <div th:if="${#fields.hasErrors('departureTime')}" class="text-danger">
+                                        <span th:errors="*{departureTime}"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrivalTime" class="form-label">Время прибытия</label>
+                                    <input type="datetime-local" class="form-control" th:field="*{arrivalTime}" required>
+                                    <div th:if="${#fields.hasErrors('arrivalTime')}" class="text-danger">
+                                        <span th:errors="*{arrivalTime}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Обновить рейс</button>
+                            <a th:href="@{/flights}" class="btn btn-secondary">Назад</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
